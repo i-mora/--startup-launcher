@@ -19,46 +19,53 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
 ```
 
 ## REST calls
-- POST issue:
-    ```console
-    foo@bar:~$ curl --request POST --url $SITE_API_URL/issue --header 'Content-Type: application/json' --header 'Accept: application/json' --data '{"fields":{"project":{"key":"project-name"},"summary":"something is wrong","description":{"type":"doc","version":1,"content":[{"type":"paragraph","content":[{"text":"This is the description","type":"text"}]}]},"issuetype":{"name":"Bug"},"reporter":{"id":"<account-id>"},"assignee":{"id":"<account-id>"}}}' --user <email>:<api-token>
-    ```
-    ```json
-    {
-        "id": "10000",
-        "key": "key-1",
-        "self": "https://<site-name>.atlassian.net/rest/api/3/issue/10000"
-    }
-    ```
-- POST user:
-    ```console
-    foo@bar:~$ curl --request POST --url $SITE_API_URL/user --header 'Content-Type: application/json' --header 'Accept: application/json' --data '{"password":"123", "emailAddress":"<email>", "displayName":"<display-name>", "name":"" }' --user <email>:<api-token>
-    ```
-    ```json
-    {
-        "self": "https://<site-name>.atlassian.net/rest/api/3/user?accountId=<account-id>",
-        "key": "<username>",
-        "accountId": "<account-id>",
-        "accountType": "atlassian",
-        "name": "<username>",
-        "emailAddress": "<email-address>",
-        "avatarUrls": { ... },    
-        "displayName": "<display-name>",    
-        "active": true, 
-        "timeZone": "America/Chicago",   
-        "locale": "en_US", 
-        "groups": {
-            "size": 0,
-            "items": []
-        },
-        "applicationRoles": {
-            "size": 0,
-            "items": []
-        },
-        "expand": "groups,applicationRoles"
-    }
-    ```
-- POST user to project:
+
+### POST
+
+- [issue](#issue)
+- [user](#user)
+- [user to projecct](#user_to_project)
+
+#### issue:
+```console
+foo@bar:~$ curl --request POST --url $SITE_API_URL/issue --header 'Content-Type: application/json' --header 'Accept: application/json' --data '{"fields":{"project":{"key":"project-name"},"summary":"something is wrong","description":{"type":"doc","version":1,"content":[{"type":"paragraph","content":[{"text":"This is the description","type":"text"}]}]},"issuetype":{"name":"Bug"},"reporter":{"id":"<account-id>"},"assignee":{"id":"<account-id>"}}}' --user <email>:<api-token>
+```
+```json
+{
+    "id": "10000",
+    "key": "key-1",
+    "self": "https://<site-name>.atlassian.net/rest/api/3/issue/10000"
+}
+```
+#### user:
+```console
+foo@bar:~$ curl --request POST --url $SITE_API_URL/user --header 'Content-Type: application/json' --header 'Accept: application/json' --data '{"password":"123", "emailAddress":"<email>", "displayName":"<display-name>", "name":"" }' --user <email>:<api-token>
+```
+```json
+{
+    "self": "https://<site-name>.atlassian.net/rest/api/3/user?accountId=<account-id>",
+    "key": "<username>",
+    "accountId": "<account-id>",
+    "accountType": "atlassian",
+    "name": "<username>",
+    "emailAddress": "<email-address>",
+    "avatarUrls": { },    
+    "displayName": "<display-name>",    
+    "active": true, 
+    "timeZone": "America/Chicago",   
+    "locale": "en_US", 
+    "groups": {
+        "size": 0,
+        "items": []
+    },
+    "applicationRoles": {
+        "size": 0,
+        "items": []
+    },
+    "expand": "groups,applicationRoles"
+}
+```
+#### user_to_project:
     ```console
     foo@bar:~$ curl --request POST --url $SITE_API_URL/project/<project-name>/role/10101 --header 'Content-Type: application/json' --header 'Accept: application/json' --data '{"user":["<account-id>"]}' --user <email>:<api-token>
     ```
@@ -88,7 +95,10 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
         }
     }
     ```
-- GET roles: // get id where name="Member"
+
+### GET calls
+
+- roles: // get id where name="Member"
     ```console
     foo@bar:~$ curl --request GET --url $SITE_API_URL/role --header 'Accept: application/json' --user <email>:<api-token>
     ```
@@ -203,7 +213,7 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
         }
     ]
     ```
-- GET users: // get * where accountType="atlassian"
+- users: // get * where accountType="atlassian"
     ```console
     foo@bar:~$ curl --request GET --url $SITE_API_URL/users/search --header 'Accept: application/json' --user <email>:<api-token>
     ```
@@ -213,7 +223,7 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
             "self": "https://<site-name>.atlassian.net/rest/api/3/user?accountId=<account-id>",
             "accountId": "<account-id>",
             "accountType": "app",
-            "avatarUrls": { ... },
+            "avatarUrls": { },
             "displayName": "Slack",
             "active": true
         },
@@ -221,7 +231,7 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
             "self": "https://<site-name>.atlassian.net/rest/api/3/user?accountId=<account-id>",
             "accountId": "<account-id>",
             "accountType": "atlassian",
-            "avatarUrls": { ... ,
+            "avatarUrls": { },
             "displayName": "<display-name>",
             "active": true
         },
@@ -229,7 +239,7 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
             "self": "https://<site-name>.atlassian.net/rest/api/3/user?accountId=<account-id>",
             "accountId": "<account-id>",
             "accountType": "app",
-            "avatarUrls": { ... },
+            "avatarUrls": { },
             "displayName": "Jira Service Desk Widget",
             "active": true
         },
@@ -238,7 +248,7 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
             "accountId": "<account-id>",
             "accountType": "atlassian",
             "emailAddress": "<email>",
-            "avatarUrls": { ... },
+            "avatarUrls": { },
             "displayName": "<display-name>",
             "active": true,
             "locale": "en_US"
@@ -247,7 +257,7 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
             "self": "https://<site-name>.atlassian.net/rest/api/3/user?accountId=<account-id>",
             "accountId": "<account-id>",
             "accountType": "app",
-            "avatarUrls": { ... },
+            "avatarUrls": { },
             "displayName": "Jira Spreadsheets",
             "active": true
         },
@@ -255,7 +265,7 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
             "self": "https://<site-name>.atlassian.net/rest/api/3/user?accountId=<account-id>",
             "accountId": "<account-id>",
             "accountType": "app",
-            "avatarUrls": { ... },
+            "avatarUrls": { },
             "displayName": "Jira Cloud for Workplace",
             "active": true
         },
@@ -263,7 +273,7 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
             "self": "https://<site-name>.atlassian.net/rest/api/3/user?accountId=<account-id>",
             "accountId": "<account-id>",
             "accountType": "atlassian",
-            "avatarUrls": { ... },
+            "avatarUrls": { },
             "displayName": "<display-name>",
             "active": true,
             "locale": "en_US"
@@ -272,7 +282,7 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
             "self": "https://<site-name>.atlassian.net/rest/api/3/user?accountId=<account-id>",
             "accountId": "<account-id>",
             "accountType": "app",
-            "avatarUrls": { ... },
+            "avatarUrls": { },
             "displayName": "Trello",
             "active": true
         },
@@ -280,13 +290,13 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
             "self": "https://<site-name>.atlassian.net/rest/api/3/user?accountId=<account-id>",
             "accountId": "<account-id>",
             "accountType": "app",
-            "avatarUrls": { ... },
+            "avatarUrls": { },
             "displayName": "Statuspage for Jira",
             "active": true
         }
     ]
     ```
-- GET projects:
+- projects:
     ```console
     foo@bar:~$ curl --request GET --url $SITE_API_URL/project/search --header 'Accept: application/json' --user <email>:<api-token>
     ```
@@ -304,7 +314,7 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
                 "id": "10000",
                 "key": "key",
                 "name": "<project-name>",
-                "avatarUrls": { ... },
+                "avatarUrls": { },
                 "projectTypeKey": "software",
                 "simplified": true,
                 "style": "next-gen",
