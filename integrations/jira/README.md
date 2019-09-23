@@ -21,15 +21,15 @@ SITE_API_URL=https://<site-name>.atlassian.net/rest/api/3
 ## Endpoints
 
 ### Issue
-- [`POST /issue`](#POST%20issue)
+- [`POST /issue`](#POST-issue)
 ### Project
-- [`GET /project`](#GET%20projects)
-- [`POST /project (join users to the project)`](#POST%20project)
+- [`GET /project`](#GET-projects)
+- [`POST /project (join users to the project)`](#POST-project)
 ### Role
-- [`GET /role`](#GET%20roles)
+- [`GET /role`](#GET-roles)
 ### User
-- [`GET /users`](#GET%20users)
-- [`POST /user`](#user)
+- [`GET /users`](#GET-users)
+- [`POST /user`](#POST-user)
 
 ## REST calls
 ---
