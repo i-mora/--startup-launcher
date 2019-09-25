@@ -79,7 +79,7 @@ foo@bar:~$ curl --request GET --url $SITE_API_URL/project/search --header 'Accep
 
 #### POST project:
 ```console
-foo@bar:~$ curl --request POST --url $SITE_API_URL/project/<project-name>/role/10101 --header 'Content-Type: application/json' --header 'Accept: application/json' --data '{"user":["<account-id>"]}' --user <email>:<api-token>
+foo@bar:~$ curl --request POST --url $SITE_API_URL/project/<project-name>/role/<Member-roleID> --header 'Content-Type: application/json' --header 'Accept: application/json' --data '{"user":["<account-id>"]}' --user <email>:<api-token>
 ```
 ```json
 {

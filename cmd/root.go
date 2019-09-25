@@ -9,8 +9,11 @@ import (
 
 var (
 	outdir string
-	token  string
 	export bool
+
+	url  string
+	user  string
+	token  string
 
 	getCMD  []string
 	postCMD []string

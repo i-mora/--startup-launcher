@@ -1,9 +1,12 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"net/http"
 	"path/filepath"
 
+	"../integrations/jira"
 	"github.com/spf13/cobra"
 )
 
@@ -11,16 +14,51 @@ var jiraCMD = &cobra.Command{
 	Use:   "jira",
 	Short: "Allows you to interact with Jira's API",
 	Run: func(cmd *cobra.Command, args []string) {
-		// key := interface{}(jira.KeyToken)
-		// ctx := context.WithValue(context.Background(), key, token)
+		a := jira.API{
+			Token:  token,
+			User:   user,
+			URL:    url,
+			Ctx:    context.Background(),
+			Client: http.Client{},
+		}
 
 		var outfile string
 		var output interface{}
 
 		if len(getCMD) > 0 {
-
+			for _, get := range getCMD {
+				switch get {
+				case "projects":
+					projects, err := a.GETprojects()
+					if err != nil {
+						cmd.PrintErrln(err)
+					}
+					outfile = "jira_projects.json"
+					output = projects
+				case "roles":
+					roles, err := a.GETroles()
+					if err != nil {
+						cmd.PrintErrln(err)
+					}
+					outfile = "jira_roles.json"
+					output = roles
+				case "users":
+					users, err := a.GETusers()
+					if err != nil {
+						cmd.PrintErrln(err)
+					}
+					outfile = "jira_users.json"
+					output = users
+				}
+			}
 		} else if len(postCMD) > 0 {
-
+			for _, post := range postCMD {
+				switch post {
+				case "issue":
+				case "project": // join user to a project
+				case "user":
+				}
+			}
 		}
 
 		if export {
@@ -37,7 +75,12 @@ func init() {
 
 	jiraCMD.Flags().BoolVar(&export, "export", false, "Generate output files.")
 	jiraCMD.Flags().StringVar(&outdir, "out-dir", "./assets", "Output directory")
+
+	jiraCMD.Flags().StringVar(&url, "url", "", "Site API url. Ex: https://<site-name>.atlassian.net/rest/api/3")
+	jiraCMD.Flags().StringVar(&user, "user", "", "User's token email")
 	jiraCMD.Flags().StringVar(&token, "token", "", "Legacy token. Info: https://api.slack.com/custom-integrations/legacy-tokens")
+	jiraCMD.MarkFlagRequired("url")
+	jiraCMD.MarkFlagRequired("user")
 	jiraCMD.MarkFlagRequired("token")
 
 	rootCMD.AddCommand(jiraCMD)

@@ -1,10 +1,23 @@
 package slack
 
+import (
+	"context"
+	"net/http"
+)
+
+type API struct {
+	URL    string
+	Token  string
+	Ctx    context.Context
+	Client http.Client
+}
+
 // UserListResponse ...
 type UserListResponse struct {
 	Ok      bool     `json:"ok"`
 	Members []Member `json:"members"`
 	CacheTs int64    `json:"cache_ts"`
+	Error   string   `json:"error"`
 }
 
 // Member ...

@@ -1,47 +1,38 @@
 package slack
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
-const (
-	apiURL = "https://slack.com/api"
-
-	// KeyToken ...
-	KeyToken = "token"
-)
-
-// GetUsers ...
-func GetUsers(ctx context.Context) ([]Member, error) {
+// GETusers ...
+func (api *API) GETusers() ([]Member, error) {
 	fmt.Println("getting users...")
 
-	var userListResponse UserListResponse
-	resource := "users.list"
-	token, ok := ctx.Value(KeyToken).(string)
-	if !ok {
-		return nil, fmt.Errorf("Key: %v was not found", KeyToken)
-	}
-	u := fmt.Sprintf("%v/%v?token=%v", apiURL, resource, token)
+	resource := "users.list?token=" + api.Token
+	u := fmt.Sprintf("%v/%v", api.URL, resource)
 
 	fmt.Println("fetching users...")
-	resp, err := http.Get(u)
+	req, err := http.NewRequestWithContext(api.Ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := api.Client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	fmt.Println("unmarshalling users...")
+	var response UserListResponse
+	err = json.NewDecoder(resp.Body).Decode(&response)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("unmarshalling users...")
-	if err := json.Unmarshal(body, &userListResponse); err != nil {
-		return nil, err
+	if response.Error != "" {
+		return nil, fmt.Errorf("GETusers error: %v", response.Error)
 	}
-	return userListResponse.Members, nil
+	return response.Members, nil
 }
